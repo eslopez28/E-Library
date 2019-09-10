@@ -5,11 +5,11 @@
 
     <groupId>com.cenfotec.e-library</groupId>
     <artifactId>e-library_parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>e-library_parent</name>
     <description>TCU for Nautilio Acosta Piepper</description>
 
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <properties>
         <java.version>1.8</java.version>
         <github.global.server>github</github.global.server>
@@ -17,23 +17,62 @@
     </properties>
 
 
+
+
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <altDeploymentRepository>
+                        internal.repo::default::file://${project.basedir}/mvn-repo
+                    </altDeploymentRepository>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.cenfotec.e-library</groupId>
                 <artifactId>e-library_parent</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0</version>
                 <configuration>
-                    <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
-                    <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-                    <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
-                    <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
-                    <includes><include>**/*</include></includes>
-                    <repositoryName>E-Library</repositoryName>      <!-- github repo name -->
-                    <repositoryOwner>eslopez28</repositoryOwner>    <!-- github username  -->
+                    <message>Maven artifacts for ${project.version}</message>
+                    <noJekyll>true</noJekyll>
+                    <outputDirectory>${project.basedir}/mvn-repo
+                    </outputDirectory>
+                    <branch>refs/heads/mvn-repo</branch>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                    <repositoryName>eslopez28</repositoryName>
+                    <repositoryOwner>E-Library</repositoryOwner>
+                    <server>github</server>
                 </configuration>
                 <executions>
-                    <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
                     <execution>
                         <goals>
                             <goal>site</goal>
@@ -43,7 +82,27 @@
                 </executions>
             </plugin>
         </plugins>
+
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${project.basedir}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
+
+    <!--repositories>
+        <repository>
+            <id>E-Liibrary-mvn-repo</id>
+            <url>https://raw.github.com/esloopez28/E-Library/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories-->
 
 
 </project>
